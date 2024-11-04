@@ -1,5 +1,6 @@
-def hello():
-    print("Hello World")
+from services import kafka_services
 
 if __name__ == "__main__":
-    hello()
+    # TODO:
+    # Init Connection of Multiples DB
+    kafka_services.kafka_consumer()

@@ -1,0 +1,4 @@
+pyodbc
+markdown
+zulip
+kafka-python
