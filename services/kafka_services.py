@@ -44,6 +44,8 @@ def kafka_consumer():
             logger.info(f"------------------------------------------")
             logger.info(f"Before: {msg_before}")
             logger.info(f"After: {msg}")
+            # TODO
+            # Consumer by config + runtime method
             if msg['status'] != '1':
                 if msg['gc_td1'] != None and msg['gc_td1'] != '':
                     sql_query = msg['gc_td1']
