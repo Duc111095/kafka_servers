@@ -25,8 +25,8 @@ def connect_db() -> any:
         if server == None: return None
 
         connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
-        conn = pyodbc.connect(connectionString)
         print(connectionString)
         print(f"Connected to database: {database}")
+        conn = pyodbc.connect(connectionString)
         result[database] = conn
     return result
