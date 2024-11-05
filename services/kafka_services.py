@@ -30,14 +30,15 @@ def kafka_consumer(connect_pool):
                             enable_auto_commit=False
                         )
     consumer.subscribe(pattern='^notify.*.dbo.notify_zullip')    
-    try:
-        for message in consumer:
+
+    for message in consumer:
+        try:
+            tp = TopicPartition(message.topic, message.partition)
+            om = OffsetAndMetadata(message.offset+1, message.timestamp)
             # Get connection from map
             db_name = message.topic.split('.')[1]
             conn = connect_pool.get(db_name)
             cursor = conn.cursor()
-            tp = TopicPartition(message.topic, message.partition)
-            om = OffsetAndMetadata(message.offset+1, message.timestamp)
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
             logger.info(f"------------------------------------------")
@@ -64,9 +65,9 @@ def kafka_consumer(connect_pool):
                     sql_query = 'update notify_zullip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
                     cursor.execute(sql_query)
                     conn.commit()
-    except Exception as e:
-        consumer.commit({tp:om})
-        conn.rollback()
-        logger.error(f"{e}")
+        except Exception as e:
+            consumer.commit({tp:om})
+            conn.rollback()
+            logger.error(f"{e}")
     for conn in connect_pool.values:
         conn.close()
