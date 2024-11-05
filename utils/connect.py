@@ -20,7 +20,7 @@ def connect_db() -> any:
         server = config.get(section, 'server')
         database = config.get(section, 'database')
         username = config.get(section, 'username')
-        password = base64.b64decode(config.get(section, 'password')).decode("utf-8")
+        password = base64.b64decode(b'MTIzNDU2YUBA').decode("utf-8")
 
         if server == None: return None
 
