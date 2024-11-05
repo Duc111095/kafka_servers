@@ -19,7 +19,7 @@ def connect_db() -> any:
     for section in config.sections():
         server = config.get(section, 'server')
         database = config.get(section, 'database')
-        username = config.get(section, 'username')
+        username = 'sa'
         password = base64.b64decode(b'MTIzNDU2YUBA').decode("utf-8")
         if server == None: return None
         connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
