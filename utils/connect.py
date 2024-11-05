@@ -16,7 +16,7 @@ def connect_db() -> any:
     config = CustomConfigParser(allow_no_value=True)
     config.read(os.path.dirname(__file__)+"/server.ini")
     result = {}
-    for section in config.sections:
+    for section in config.sections():
         server = config.get(section, 'server')
         database = config.get(section, 'database')
         username = config.get(section, 'username')
