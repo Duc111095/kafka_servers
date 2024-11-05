@@ -4,7 +4,6 @@ from kafka import KafkaConsumer, TopicPartition, OffsetAndMetadata
 
 from entity.tbmt import Tbmt
 from services.format_tbmt import task_to_send
-from utils.connect import connect_db
 from utils.logger import get_app_logger
 from utils import zullip_code as zc
 
@@ -15,27 +14,27 @@ def getdecode(obj):
     else:
         return json.loads(obj.decode('utf-8'))
     
-def kafka_consumer():
+def kafka_consumer(connect_pool):
     logger = get_app_logger()
     # TODO
     # Consumer multiples topics
     bootstrap_server = 'localhost:9092'
-    topic = 'notify.SKMT_App.dbo.notify_zullip'
+    # topic = 'notify.SKMT_App.dbo.notify_zullip, '
     # To consume latest messages and auto-commit offsets
     consumer = KafkaConsumer(
-                            topic,
-                            client_id='zullip-local',
-                            group_id='zullip-consumer',
+                            client_id='zullip-server',
+                            group_id='zullip-servers-consumer',
                             bootstrap_servers=bootstrap_server,
                             auto_offset_reset='latest',
                             value_deserializer=lambda m: getdecode(m),
                             enable_auto_commit=False
-                            )
+                        )
+    consumer.subscribe(pattern='^notify.*.dbo.notify_zullip')    
     try:
         for message in consumer:
-            # TODO:
             # Get connection from map
-            conn = connect_db()
+            db_name = message.topic.split('.')[1]
+            conn = connect_pool.get(db_name)
             cursor = conn.cursor()
             tp = TopicPartition(message.topic, message.partition)
             om = OffsetAndMetadata(message.offset+1, message.timestamp)
@@ -69,4 +68,5 @@ def kafka_consumer():
         consumer.commit({tp:om})
         conn.rollback()
         logger.error(f"{e}")
-    conn.close()
+    for conn in connect_pool.values:
+        conn.close()

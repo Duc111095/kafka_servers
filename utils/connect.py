@@ -1,3 +1,4 @@
+import base64
 import os
 from pathlib import Path
 
@@ -11,18 +12,19 @@ class CustomConfigParser(configparser.RawConfigParser):
         except configparser.NoOptionError:
             return None
 
-def connect_db(db_name: str) -> any:
+def connect_db() -> any:
     config = CustomConfigParser(allow_no_value=True)
-    config.read(os.path.dirname(__file__)+"/config.ini")
+    config.read(os.path.dirname(__file__)+"/server.ini")
+    result = {}
+    for section in config.sections:
+        server = config.get(section, 'server')
+        database = config.get(section, 'database')
+        username = config.get(section, 'username')
+        password = base64.b64decode(config.get(section, 'password')).decode("utf-8")
 
-    server = config.get(db_name, 'server')
-    database = config.get(db_name, 'database')
-    username = config.get(db_name, 'username')
-    password = config.get(db_name, 'password')
+        if server == None: return None
 
-    if server == None: return None
-
-    connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
-    conn = pyodbc.connect(connectionString)
-    print(f"Connected to {db_name}")
-    return conn
+        connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
+        conn = pyodbc.connect(connectionString)
+        result[database] = conn
+    return result

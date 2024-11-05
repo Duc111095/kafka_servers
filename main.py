@@ -1,6 +1,8 @@
 from services import kafka_services
+from utils import connect
 
 if __name__ == "__main__":
-    # TODO:
     # Init Connection of Multiples DB
-    kafka_services.kafka_consumer()
+    server_pool = connect.connect_db()
+    # Kafka consumer
+    kafka_services.kafka_consumer(server_pool)
