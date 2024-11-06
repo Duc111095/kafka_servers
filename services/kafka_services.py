@@ -37,10 +37,7 @@ def kafka_consumer(connect_pool):
             om = OffsetAndMetadata(message.offset+1, message.timestamp)
             # Get connection from map
             db_name = message.topic.split('.')[1]
-            print(connect_pool)
             conn = connect_pool.get(db_name)
-            print(db_name)
-            print(conn)
             cursor = conn.cursor()
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
@@ -65,7 +62,7 @@ def kafka_consumer(connect_pool):
                 logger.info(f"Result: {result}")
                 consumer.commit({tp:om})
                 if result['result'] == 'success':
-                    sql_query = 'update notify_zullip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
+                    sql_query = 'update notify_zulip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
                     cursor.execute(sql_query)
                     conn.commit()
         except Exception as e:
