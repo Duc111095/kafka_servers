@@ -29,7 +29,7 @@ def kafka_consumer(connect_pool):
                             value_deserializer=lambda m: getdecode(m),
                             enable_auto_commit=False
                         )
-    consumer.subscribe(pattern='^notify.*.dbo.notify_zullip')    
+    consumer.subscribe(pattern='^notify.*.dbo.notify_zulip')    
 
     for message in consumer:
         try:
