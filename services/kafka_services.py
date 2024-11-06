@@ -37,7 +37,7 @@ def kafka_consumer(connect_pool):
             om = OffsetAndMetadata(message.offset+1, message.timestamp)
             # Get connection from map
             db_name = message.topic.split('.')[1]
-            conn = connect_pool.get(db_name)
+            conn = connect_pool.get(db_name.lower())
             cursor = conn.cursor()
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
