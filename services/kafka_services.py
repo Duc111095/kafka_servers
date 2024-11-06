@@ -38,6 +38,8 @@ def kafka_consumer(connect_pool):
             # Get connection from map
             db_name = message.topic.split('.')[1]
             conn = connect_pool.get(db_name)
+            print(db_name)
+            print(conn)
             cursor = conn.cursor()
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
