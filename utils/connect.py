@@ -17,7 +17,7 @@ def connect_db() -> any:
     config.read(os.path.dirname(__file__)+"/server.ini")
     result = {}
     for section in config.sections():
-        server = config.get(section, 'server').str.lower()
+        server = config.get(section, 'server').lower()
         database = config.get(section, 'database')
         username = 'sa'
         password = base64.b64decode(b'MTIzNDU2YUBA').decode("utf-8")
