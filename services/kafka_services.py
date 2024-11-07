@@ -63,6 +63,7 @@ def kafka_consumer(connect_pool):
                 consumer.commit({tp:om})
                 if result['result'] == 'success':
                     sql_query = 'update notify_zulip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
+                    logger.info(sql_query)
                     cursor.execute(sql_query)
                     conn.commit()
         except Exception as e:
