@@ -60,12 +60,12 @@ def kafka_consumer(connect_pool):
                 else:
                     result = zc.send_msg_group(msg_task, int(msg['to_person']))
                 logger.info(f"Result: {result}")
-                consumer.commit({tp:om})
                 if result['result'] == 'success':
                     sql_query = 'update notify_zulip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
                     cursor.execute(sql_query)
                     logger.info(sql_query)
                     conn.commit()
+                consumer.commit({tp:om})
         except Exception as e:
             consumer.commit({tp:om})
             conn.rollback()
