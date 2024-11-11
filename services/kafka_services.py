@@ -42,6 +42,7 @@ def kafka_consumer(connect_pool):
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
             logger.info(f"------------------------------------------")
+            logger.info(f"Operation: {message.value['payload']['op']}")
             logger.info(f"{db_name} - Before: {msg_before}")
             logger.info(f"{db_name} - After: {msg}")
             # TODO
