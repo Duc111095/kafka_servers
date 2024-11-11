@@ -42,8 +42,8 @@ def kafka_consumer(connect_pool):
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
             logger.info(f"------------------------------------------")
-            logger.info(f"{message.topic} - Before: {msg_before}")
-            logger.info(f"{message.topic} - After: {msg}")
+            logger.info(f"{db_name} - Before: {msg_before}")
+            logger.info(f"{db_name} - After: {msg}")
             # TODO
             # Consumer by config + runtime method
             if msg['status'] != '1':
@@ -68,7 +68,7 @@ def kafka_consumer(connect_pool):
             consumer.commit({tp:om})
         except Exception as e:
             conn.rollback()
-            logger.error(f"{message.topic} - {e}")
+            logger.error(f"{db_name} - {e}")
             consumer.commit({tp:om})
     for conn in connect_pool.values:
         conn.close()
