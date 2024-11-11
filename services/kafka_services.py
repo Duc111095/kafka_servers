@@ -47,7 +47,7 @@ def kafka_consumer(connect_pool):
             logger.info(f"{db_name} - After: {msg}")
             # TODO
             # Consumer by config + runtime method
-            if msg['status'] != '1':
+            if msg['status'] != '1' and message.value['payload']['op'] != 'r':
                 if msg['gc_td1'] != None and msg['gc_td1'] != '':
                     sql_query = msg['gc_td1']
                     cursor.execute(sql_query)
