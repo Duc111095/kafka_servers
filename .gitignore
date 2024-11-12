@@ -3,3 +3,4 @@ zuliprc
 config.ini
 server.ini
 log/
+*log
