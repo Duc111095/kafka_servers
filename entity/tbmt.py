@@ -26,5 +26,5 @@ class Tbmt:
         return msg
 
     def to_task(self) -> str:
-        task = f'Task {self.stt}: {self.ma_bp} - {self.ma_nvbh_th} - {self.so_ct} - {self.ten_thau} - {self.ten_kh} - Ngày đóng thầu: {datetime.strftime(self.ngay_dong_thau,"%d-%m-%Y")}\n'
+        task = f'Task {self.stt}: {self.ma_bp} - {self.ma_nvbh_th} - {self.so_ct} - {self.ten_thau} - {self.ten_kh} - Ngày đóng thầu: {datetime.strftime(self.ngay_dong_thau,"%d-%m-%Y %H:%M")}\n'
         return task
