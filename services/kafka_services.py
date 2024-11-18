@@ -50,7 +50,6 @@ def kafka_consumer(connect_pool):
             if msg['status'] != '1' and message.value['payload']['op'] != 'r':
                 if msg['gc_td1'] != None and msg['gc_td1'] != '':
                     sql_query = msg['gc_td1']
-                    logger.info(sql_query)
                     cursor.execute(sql_query)
                     tbmts: list[Tbmt] = cursor.fetchall()
                     if len(tbmts) > 0:
