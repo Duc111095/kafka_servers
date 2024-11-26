@@ -56,9 +56,7 @@ def kafka_consumer(connect_pool):
                         tbmts: list[Tbmt] = cursor.fetchall()
                         msg_task = task_to_send(tbmts)
                     except Exception as e:
-                        msg_task = f'''
-                            Không có Thông báo thầu đến hạn - Ngày {datetime.strftime(datetime.now().date(), "%d-%m-%Y")}
-                        '''
+                        msg_task = f'Không có Thông báo thầu đến hạn - Ngày {datetime.strftime(datetime.now().date(), "%d-%m-%Y")}'
                         logger.info("Skipping non rs message: {}".format(e))
                 else:
                     msg_task = msg['content']
