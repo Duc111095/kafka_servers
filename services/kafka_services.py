@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 from kafka import KafkaConsumer, TopicPartition, OffsetAndMetadata
@@ -51,11 +52,14 @@ def kafka_consumer(connect_pool):
                 if msg['gc_td1'] != None and msg['gc_td1'] != '':
                     sql_query = msg['gc_td1']
                     cursor.execute(sql_query)
-                    tbmts: list[Tbmt] = cursor.fetchall()
-                    if len(tbmts) > 0:
+                    try:
+                        tbmts: list[Tbmt] = cursor.fetchall()
                         msg_task = task_to_send(tbmts)
-                    else:
-                        msg_task = "Không còn TBMT đến hạn."
+                    except Exception as e:
+                        msg_task = f'''
+                            Không có Thông báo thầu đến hạn - Ngày {datetime.strftime(datetime.now().date(), "%d-%m-%Y")}
+                        '''
+                        logger.info("Skipping non rs message: {}".format(e))
                 else:
                     msg_task = msg['content']
                 if msg['group_yn'] != '1':
