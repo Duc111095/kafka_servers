@@ -10,8 +10,7 @@ def send_msg_group(msg: str, to: int) -> any:
         "type": "stream",
         "to": to,
         "topic": "channel events",
-        "content": markdown.markdown(msg).replace("<p>", "").replace("</p>", "").replace("<pre><code>", "").replace(
-            "</code></pre>", ""),
+        "content": msg,
     }
     result = client.send_message(request)
     return result
