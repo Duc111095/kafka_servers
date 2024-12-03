@@ -20,10 +20,13 @@ def send_msg_group(msg: str, to: int) -> any:
 
 
 def send_msg_private(msg: str, to: int) -> any:
+    if "/todo" in msg:
+        msg = markdown.markdown(msg).replace("<p>", "").replace("</p>", "").replace("<pre><code>", "").replace("</code></pre>", "")
+
     request = {
         "type": "private",
         "to": [to],
-        "content": markdown.markdown(msg).replace("<p>", "").replace("</p>", "").replace("<pre><code>", "").replace("</code></pre>", ""),
+        "content": msg,
     }
     result = client.send_message(request)
     return result
