@@ -23,6 +23,6 @@ def connect_db() -> any:
         password = base64.b64decode(b'MTIzNDU2YUBA').decode("utf-8")
         if server == None: return None
         connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
-        conn = pyodbc.connect(connectionString)
-        result[database] = conn
+        #conn = pyodbc.connect(connectionString)
+        result[database] = connectionString
     return result

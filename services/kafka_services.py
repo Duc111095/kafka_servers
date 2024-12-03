@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import pyodbc
 
 from kafka import KafkaConsumer, TopicPartition, OffsetAndMetadata
 
@@ -38,7 +39,8 @@ def kafka_consumer(connect_pool):
             om = OffsetAndMetadata(message.offset+1, message.timestamp)
             # Get connection from map
             db_name = message.topic.split('.')[1]
-            conn = connect_pool.get(db_name.lower())
+            connectString = connect_pool.get(db_name.lower())
+            conn = pyodbc.connect(connectString)
             cursor = conn.cursor()
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
@@ -75,5 +77,7 @@ def kafka_consumer(connect_pool):
             conn.rollback()
             logger.error(f"{db_name} - {e}")
             consumer.commit({tp:om})
+        finally:
+            conn.close()
     for conn in connect_pool.values:
         conn.close()
