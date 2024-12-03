@@ -72,12 +72,11 @@ def kafka_consumer(connect_pool):
                     cursor.execute(sql_query)
                     logger.info(sql_query)
                     conn.commit()
-            consumer.commit({tp:om})
         except Exception as e:
             conn.rollback()
             logger.error(f"{db_name} - {e}")
-            consumer.commit({tp:om})
         finally:
+            consumer.commit({tp:om})
             conn.close()
     for conn in connect_pool.values:
         conn.close()
