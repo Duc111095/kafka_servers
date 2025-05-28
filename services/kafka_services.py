@@ -18,6 +18,7 @@ def getdecode(obj):
     
 def kafka_consumer(connect_pool):
     logger = get_app_logger()
+    logger.info("Starting Kafka Consumer")
     # TODO
     # Consumer multiples topics
     bootstrap_server = 'localhost:9092'
