@@ -5,3 +5,4 @@ server.ini
 log/
 *log
 .venv/
+/source_excel
