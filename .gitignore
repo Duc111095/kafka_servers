@@ -6,6 +6,4 @@ log/
 *log
 .venv/
 /source_excel
-__pycache__/
-*.pyc
 tempCodeRunnerFile.py
