@@ -28,8 +28,8 @@ def kafka_consumer(connect_pool):
     # topic = 'notify.SKMT_App.dbo.notify_zullip, '
     # To consume latest messages and auto-commit offsets
     consumer = KafkaConsumer(
-                            client_id='zullip-server-2',
-                            group_id='zullip-servers-consumer-2',
+                            client_id='zullip-server-5',
+                            group_id='zullip-servers-consumer-5',
                             bootstrap_servers=bootstrap_server,
                             auto_offset_reset='latest',
                             value_deserializer=lambda m: getdecode(m),
@@ -41,7 +41,6 @@ def kafka_consumer(connect_pool):
         try:
             tp = TopicPartition(message.topic, message.partition)
             om = OffsetAndMetadata(message.offset+1, message.timestamp)
-            # Get connection from map
             db_name = message.topic.split('.')[1]
             connectString = connect_pool.get(db_name.lower())
             conn = pyodbc.connect(connectString)
