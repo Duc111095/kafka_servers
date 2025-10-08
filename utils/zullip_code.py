@@ -5,14 +5,17 @@ import markdown
 
 client = zulip.Client(config_file=os.path.dirname(__file__)+"/zuliprc")
 
-def send_msg_group(msg: str, to: int) -> any:
+def send_msg_group(msg: str, to: int, topic: str = '') -> any:
     if "/todo" in msg:
         msg = markdown.markdown(msg).replace("<p>", "").replace("</p>", "").replace("<pre><code>", "").replace("</code></pre>", "")
+    
+    if topic == None or topic == '':
+        topic = "channel events"
 
     request = {
         "type": "stream",
         "to": to,
-        "topic": "channel events",
+        "topic": topic,
         "content": msg,
     }
     result = client.send_message(request)

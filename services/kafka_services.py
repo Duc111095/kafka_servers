@@ -95,7 +95,7 @@ def kafka_consumer(connect_pool):
                             logger.error(f"Error: {e} - SQL query: {sql_query}")
                 else:
                     if file_name == None or file_name == '':
-                        result = zc.send_msg_group(msg_task, int(msg['to_person']))
+                        result = zc.send_msg_group(msg_task, int(msg['to_person']), topic)
                     else:
                         try:
                             result = zc.upload_file_group(dest_file, int(to_person), content.strip() + " " + datetime.now().strftime('%d-%m-%Y'), topic)
