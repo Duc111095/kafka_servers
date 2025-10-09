@@ -24,14 +24,14 @@ def kafka_consumer(connect_pool):
     logger.info("Starting Kafka Consumer")
     # TODO
     # Consumer multiples topics
-    bootstrap_server = 'localhost:9092'
+    bootstrap_server = '192.168.100.52:9092'
     # topic = 'notify.SKMT_App.dbo.notify_zullip, '
     # To consume latest messages and auto-commit offsets
     consumer = KafkaConsumer(
-                            client_id='zullip-server-5',
-                            group_id='zullip-servers-consumer-5',
+                            client_id='zullip-server-51',
+                            group_id='zullip-servers-consumer-51',
                             bootstrap_servers=bootstrap_server,
-                            auto_offset_reset='latest',
+                            auto_offset_reset='earliest',
                             value_deserializer=lambda m: getdecode(m),
                             enable_auto_commit=False
                         )
