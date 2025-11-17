@@ -15,9 +15,12 @@ def create_excel_file_from_sql_data(cursor, query: str, src_file: str, start_row
         return None
     
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "source_excel", src_file)
-    content = pd.read_excel(src_path, header=None, skiprows=0)
-    columns_dict = content.iloc[start_row + 1].to_dict()
-    columns_header = content.iloc[start_row].to_dict()
+    content = pd.read_excel(src_path, header=start_row, skiprows=start_row)
+    columns_dict = content.iloc[1].to_dict()
+    columns_header = content.columns.to_dict()
+    logger.log(f"Column Dict: {columns_dict}")
+    logger.log(f"Column Header: {columns_header}")
+
     cursor.execute(query)
     index_table = get_table_index(str(columns_dict.get(0)))
     index_loop = 1
@@ -72,20 +75,23 @@ def get_column_name(s : str) -> str:
     except (IndexError, ValueError):
         return ''
     
-def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
+def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str:
     logger = get_app_logger()
 
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
-        df.to_excel(writer, sheet_name="Sheet1", startrow= 1, index=False, header=0)
-        worksheet = writer.sheets["Sheet1"]
+        logger.log(f"{columns_dict.values()}")
         for i, col_name in columns_dict.items():
-            logger.log(f"{col_name}")
             if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
                 df[i] = [datetime(element) for element in df[i].astype(str).tolist()]
             elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()): 
                 df[i] = [float(element) for element in df[i].astype(str).tolist()]
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
+            
+        df.to_excel(writer, sheet_name="Sheet1", startrow=0, index=False, columns=columns_dict.values())
+        worksheet = writer.sheets["Sheet1"]
+        for i, col_name in columns_dict.items():
+            df[i] = [element.strip() for element in df[i].astype(str).tolist()]
 
             column_len = df[i].map(len).max()
             column_len = max(column_len, len(col_name)) + 2
