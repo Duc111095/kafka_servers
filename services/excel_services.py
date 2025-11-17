@@ -71,7 +71,12 @@ def get_column_name(s : str) -> str:
         return s[i:k].strip()
     except (IndexError, ValueError):
         return ''
-    
+
+def getDateTime(dateStr: str) -> datetime:
+    date_format = '%Y-%m-%d %H:%M:%S'
+    date_obj = datetime.strptime(dateStr, date_format)
+    return date_obj
+
 def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str:
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
         for i, col_name in columns_dict.items():
@@ -79,6 +84,11 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
                 list = []
                 list.append(df[i][0])
                 list.extend([float(element) for element in df[i].astype(str).tolist()[1:]]) 
+                df[i] = list
+            if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
+                list = []
+                list.append(df[i][0])
+                list.extend([getDateTime(element[0:18]) for element in df[i].astype(str).tolist()[1:]]) 
                 df[i] = list
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
