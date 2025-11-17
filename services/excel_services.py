@@ -78,7 +78,11 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
         worksheet = writer.sheets["Sheet1"]
 
         for i, col_name in columns_dict.items():
-            df[i] = [element.strip() for element in df[i].astype(str).tolist()]
+            if df[i].dtype == 'object':
+                list_df = df[i].astype(str).tolist()
+            else:
+                list_df = df[i].tolist()
+            df[i] = [element.strip() for element in list_df]
             column_len = df[i].map(len).max()
             column_len = max(column_len, len(col_name)) + 2
             worksheet.set_column(i, i, column_len)
