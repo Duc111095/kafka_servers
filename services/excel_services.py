@@ -81,18 +81,15 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
                 list = []
                 list.append(df[i][0])
                 list.extend([datetime(element) for element in df[i].astype(str).tolist()[1:]])
-                logger.info(f"{str(list)}")
                 df[i] = list
             elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()):
                 list = []
                 list.append(df[i][0])
                 list.extend([float(element) for element in df[i].astype(str).tolist()[1:]]) 
-                logger.info(f"{str(list)}")
-
                 df[i] = list
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
-
+        logger.log(f"{df.to_string()}")
         df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False)
         worksheet = writer.sheets["Sheet1"]
         for i, col_name in columns_dict.items():
