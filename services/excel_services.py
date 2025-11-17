@@ -73,16 +73,16 @@ def get_column_name(s : str) -> str:
         return ''
     
 def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
+    logger = get_app_logger()
+
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
         df.to_excel(writer, sheet_name="Sheet1", index=False, header=False)
         worksheet = writer.sheets["Sheet1"]
-
         for i, col_name in columns_dict.items():
+            logger.info(f"{col_name} : {df[i].dtype}")
             if df[i].dtype == 'object':
-                list_df = df[i].astype(str).tolist()
-            else:
-                list_df = df[i].tolist()
-            df[i] = [element.strip() for element in list_df]
+                df[i] = [element.strip() for element in df[i].astype(str).tolist()]
+                
             column_len = df[i].map(len).max()
             column_len = max(column_len, len(col_name)) + 2
             worksheet.set_column(i, i, column_len)
