@@ -78,11 +78,18 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
         for i, col_name in columns_dict.items():
             if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
-                df[i][1:] = [datetime(element) for element in df[i].astype(str).tolist()[1:]]
-            elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()): 
-                df[i][1:] = [float(element) for element in df[i].astype(str).tolist()[1:]]
+                list = []
+                list.append(df[i][0])
+                list.append([datetime(element) for element in df[i].astype(str).tolist()[1:]])
+                logger.info(f"{str(list)}")
+                df[i] = list
+            elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()):
+                list = []
+                list.append(df[i][0])
+                list.append([float(element) for element in df[i].astype(str).tolist()[1:]]) 
+                df[i] = list
             else:
-                df[i][1:] = [element.strip() for element in df[i].astype(str).tolist()[1:]]
+                df[i] = [element.strip() for element in df[i].astype(str).tolist()]
 
         df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False)
         worksheet = writer.sheets["Sheet1"]
