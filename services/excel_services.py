@@ -79,10 +79,13 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
         df.to_excel(writer, sheet_name="Sheet1", index=False, header=False)
         worksheet = writer.sheets["Sheet1"]
         for i, col_name in columns_dict.items():
-            logger.info(f"{col_name} : {df[i].dtype}")
-            if df[i].dtype == 'object':
+            if 'ngày' in col_name.lower() or 'date' in col_name.lower:
+                df[i] = df[i].apply(pd.to_datetime)
+            elif 'giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower(): 
+                df[i] = df[i].apply(pd.to_numeric, errors='coerce')
+            else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
-                
+
             column_len = df[i].map(len).max()
             column_len = max(column_len, len(col_name)) + 2
             worksheet.set_column(i, i, column_len)
