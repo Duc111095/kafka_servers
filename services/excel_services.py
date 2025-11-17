@@ -76,7 +76,7 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
     logger = get_app_logger()
 
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
-        logger.log(f"{columns_dict.values().tolist()}")
+        logger.log(f"{columns_dict.values()}")
         for i, col_name in columns_dict.items():
             if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
                 df[i] = [datetime(element) for element in df[i].astype(str).tolist()[1:]]
@@ -85,7 +85,7 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()[1:]]
 
-        df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False, header=columns_dict.values().tolist())
+        df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False, header=columns_dict.values())
         worksheet = writer.sheets["Sheet1"]
         for i, col_name in columns_dict.items():
             df[i] = [element.strip() for element in df[i].astype(str).tolist()]
