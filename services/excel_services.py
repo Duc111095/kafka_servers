@@ -18,6 +18,7 @@ def create_excel_file_from_sql_data(cursor, query: str, src_file: str, start_row
     content = pd.read_excel(src_path, header=None, skiprows=0)
     columns_dict = content.iloc[start_row + 1].to_dict()
     columns_header = content.iloc[start_row].to_dict()
+    logger.log(content)
     cursor.execute(query)
     index_table = get_table_index(str(columns_dict.get(0)))
     index_loop = 1
