@@ -76,12 +76,13 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
     logger = get_app_logger()
 
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
-        df.to_excel(writer, sheet_name="Sheet1", index=False, header=False)
+        df.to_excel(writer, sheet_name="Sheet1", startrow= 1, index=False, header=0)
         worksheet = writer.sheets["Sheet1"]
+        firstRow = True
         for i, col_name in columns_dict.items():
-            if 'ngày' in col_name.lower() or 'date' in col_name.lower():
+            if not firstRow and ('ngày' in col_name.lower() or 'date' in col_name.lower()):
                 df[i] = [datetime(element) for element in df[i].astype(str).tolist()]
-            elif 'giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower(): 
+            elif not firstRow and ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()): 
                 df[i] = [float(element) for element in df[i].astype(str).tolist()]
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
