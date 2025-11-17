@@ -24,7 +24,7 @@ def kafka_consumer(connect_pool):
     logger.info("Starting Kafka Consumer")
     # TODO
     # Consumer multiples topics
-    bootstrap_server = '192.168.100.52:9092'
+    bootstrap_server = 'localhost:9092'
     # topic = 'notify.SKMT_App.dbo.notify_zullip, '
     # To consume latest messages and auto-commit offsets
     consumer = KafkaConsumer(
@@ -40,18 +40,13 @@ def kafka_consumer(connect_pool):
     for message in consumer:
         try:
             tp = TopicPartition(message.topic, message.partition)
-            om = OffsetAndMetadata(message.offset+1, message.timestamp)
+            om = OffsetAndMetadata(message.offset+1, message.timestamp, 1)
             db_name = message.topic.split('.')[1]
             connectString = connect_pool.get(db_name.lower())
             conn = pyodbc.connect(connectString)
             cursor = conn.cursor()
             msg_before = message.value['payload']['before'] 
             msg = message.value['payload']['after']
-            logger.info(f"------------------------------------------")
-            logger.info(f"Operation: {message.value['payload']['op']}")
-            logger.info(f"{db_name} - Before: {msg_before}")
-            logger.info(f"{db_name} - After: {msg}")
-
             file_name = msg['gc_td2']
             file_name_dest = msg['gc_td3']
             if msg['s4'] != None and msg['s4'] != '': 
@@ -107,7 +102,6 @@ def kafka_consumer(connect_pool):
                 if result['result'] == 'success':
                     sql_query = 'update notify_zulip set datetime2 = getdate(), status = 1 where id = ' + str(msg['id'])
                     cursor.execute(sql_query)
-                    logger.info(sql_query)
                     conn.commit()
         except Exception as e:
             conn.rollback()

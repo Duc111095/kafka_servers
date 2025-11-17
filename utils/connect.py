@@ -21,6 +21,6 @@ def connect_db() -> any:
         username = 'sa'
         password = base64.b64decode(b'MTIzNDU2YUBA').decode("utf-8")
         if server == None: return None
-        connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
+        connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=YES;TrustServerCertificate=YES'
         result[database] = connectionString
     return result

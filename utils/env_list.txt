@@ -1,0 +1,10 @@
+ma_bp=NP n_server=192.168.5.11 n_database=NamPhuong_App
+ma_bp=SK n_server=10.0.20.11 n_database=SKMT_App
+ma_bp=NA n_server=192.168.60.17 n_database=NhatAnh_App
+ma_bp=MT n_server=192.168.100.51 n_database=MinhTam_App
+ma_bp=MTHCM n_server=192.168.10.47 n_database=MinhTamHCM_App 
+ma_bp=HA n_server=192.168.60.16 n_database=HongAnh_App
+ma_bp=TH n_server=192.168.60.12 n_database=ThanhHa_App
+ma_bp=DMHCM n_server=10.0.10.16 n_database=DuyMinhHCM_App
+ma_bp=HN n_server=192.168.60.18 n_database=HaiNam_App
+ma_bp=MA n_server=192.168.100.53 n_database=MinhAn_App
