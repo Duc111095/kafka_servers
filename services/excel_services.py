@@ -18,7 +18,6 @@ def create_excel_file_from_sql_data(cursor, query: str, src_file: str, start_row
     content = pd.read_excel(src_path, header=None, skiprows=0)
     columns_dict = content.iloc[start_row + 1].to_dict()
     columns_header = content.iloc[start_row].to_dict()
-    logger.log(f"{content}")
     cursor.execute(query)
     index_table = get_table_index(str(columns_dict.get(0)))
     index_loop = 1
@@ -77,14 +76,14 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
     logger = get_app_logger()
 
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
-        logger.log(f"{col_name}")
         for i, col_name in columns_dict.items():
+            logger.log(f"{df[i]}")
             if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
-                df[i][1:] = [datetime(element) for element in df[i][1:].astype(str).tolist()]
+                df[i] = [datetime(element) for element in df[i].astype(str).tolist()[1:]]
             elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()): 
-                df[i][1:] = [float(element) for element in df[i][1:].astype(str).tolist()]
+                df[i] = [float(element) for element in df[i].astype(str).tolist()[1:]]
             else:
-                df[i][1:] = [element.strip() for element in df[i][1:].astype(str).tolist()]
+                df[i] = [element.strip() for element in df[i].astype(str).tolist()[1:]]
 
         df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False)
         worksheet = writer.sheets["Sheet1"]
