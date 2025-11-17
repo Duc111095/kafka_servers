@@ -80,9 +80,9 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict) -> str:
         worksheet = writer.sheets["Sheet1"]
         for i, col_name in columns_dict.items():
             if 'ngày' in col_name.lower() or 'date' in col_name.lower():
-                df[i] = pd.to_datetime(df[i], errors='coerce')
+                df[i] = [datetime(element) for element in df[i].astype(str).tolist()]
             elif 'giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower(): 
-                df[i] = pd.to_numeric(df[i], errors='coerce')
+                df[i] = [float(element) for element in df[i].astype(str).tolist()]
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
 
