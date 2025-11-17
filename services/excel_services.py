@@ -73,8 +73,6 @@ def get_column_name(s : str) -> str:
         return ''
     
 def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str:
-    logger = get_app_logger()
-
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
         for i, col_name in columns_dict.items():
             if ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()):
@@ -84,7 +82,6 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
                 df[i] = list
             else:
                 df[i] = [element.strip() for element in df[i].astype(str).tolist()]
-        logger.log(f"{df.to_string()}")
         df.to_excel(writer, sheet_name="Sheet1", startrow= 0, index=False)
         worksheet = writer.sheets["Sheet1"]
         for i, col_name in columns_dict.items():
