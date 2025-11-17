@@ -77,12 +77,7 @@ def save_excel_file(df: pd.DataFrame, dest_file: str, columns_dict: dict) -> str
 
     with pd.ExcelWriter(dest_file, engine="xlsxwriter") as writer:
         for i, col_name in columns_dict.items():
-            if ('ngày' in col_name.lower() or 'date' in col_name.lower()):
-                list = []
-                list.append(df[i][0])
-                list.extend([datetime(element) for element in df[i].astype(str).tolist()[1:]])
-                df[i] = list
-            elif ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()):
+            if ('giá' in col_name.lower() or 'tiền' in col_name.lower() or 'số lượng' in col_name.lower()):
                 list = []
                 list.append(df[i][0])
                 list.extend([float(element) for element in df[i].astype(str).tolist()[1:]]) 
